@@ -1273,7 +1273,7 @@ class App extends Component {
 testrender(){
    return (<div> m: {this.state.time.m} s: {this.state.time.s}</div>);
 }
- 
+ /////////
 async genesisStart(){
   console.log("Genesis Start Called");
  
@@ -1451,6 +1451,7 @@ async pause(){
     }); 
 }
 
+
 async unpause(){
     var pauseRound= await this.state.contractData.methods.unpause().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
       console.log(reponse);
@@ -1462,6 +1463,38 @@ async unpause(){
     }); 
 }
 
+
+async _getUserRoundsShow(_view){
+    var _getUserRoundsLength=await this.state.contractData.methods.getUserRoundsLength(this.state.account.accounts[0]).call();
+    console.log('_getUserRoundsLength: '+_getUserRoundsLength);
+      
+    var cursorVal=document.getElementById("cursor").value;
+    var _getUserRounds=await this.state.contractData.methods.getUserRounds(this.state.account.accounts[0],cursorVal,_getUserRoundsLength).call();
+    console.log(_getUserRounds);
+
+      //////////////////Claim Function////////////////////
+      console.log('Claim Function Called');
+    var _roundIdInput=document.getElementById("roundIdInput").value;      
+      if(_view){
+        var _claim= await this.state.contractData.methods.claim([_roundIdInput]).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
+          console.log(reponse);
+        }).catch((err)=>{
+          console.log(err.message);
+        });        
+      } 
+      else{
+        var _claim= await this.state.contractData.methods.claim([_roundIdInput]).send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+          console.log(reponse);
+        }).catch((err)=>{
+          console.log(err.message);
+        });        
+      }      
+
+
+}
+
+
+
   render() {
 
     return (
@@ -1469,7 +1502,7 @@ async unpause(){
      
             <p>Hola</p>
             {this.testrender()} 
-            <p>Runnig (Not Bettable):{this.state.bettable-1}</p>
+            <p>Running (Not Bettable):{this.state.bettable-1}</p>
             <p>Bettable (Now):{this.state.bettable}</p>
             <p>Next Bettable (Not now) :{this.state.bettable+1}</p>
             <button onClick={() => this.genesisStart()}>Genesis Start</button>
@@ -1482,16 +1515,27 @@ async unpause(){
             <button onClick={() => this.loadEpoch()}>Load Epoch</button>
             <button onClick={() => this.oracleView()}>Oracle View Current Round ID</button>
             <button onClick={() => this.pause()}>Pause</button> 
-            <button onClick={() => this.unpause()}>UnPause</button>                        
+            <button onClick={() => this.unpause()}>UnPause</button>                     
             <p>------------------------------</p>
-            <p>Load Bettable/Running/Future Round Data</p>
+
+            <p>Load Bettable/Running/Future Round Data: 
              <input type="number" id="roundId"/>
              <button onClick={() => this.showRoundData()}>Load Round </button>
-
-            <p>Load Ledger Data for Specific Round</p>
+            </p> 
+            <p>Load Ledger Data for Specific Round: 
              <input type="number" id="myText"/>
              <button onClick={() => this.show()}>Show </button>
+            </p>
+            <p>Input Cursor: 
+              <input type="number" id="cursor"/>
+              Input Round:
+               <input type="number" id="roundIdInput"/>
+              <button onClick={() => this._getUserRoundsShow('view')}>View Error </button>
+              <button onClick={() => this._getUserRoundsShow()}>_getUserRoundsShow </button>
+            </p>
+
             </>  
+
     );
   }
 }
