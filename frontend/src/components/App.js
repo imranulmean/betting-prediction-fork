@@ -21,10 +21,8 @@ class App extends Component {
     let metaData;
     await this.loadWeb3();
     await this.loadBlockchainData();
-    //this.countdown = setInterval(this.axiosFunc, 1000);
-    // let timeLeftVar = this.secondsToTime(this.state.seconds);
-    // this.setState({ time: timeLeftVar });    
      this.startTimer();
+     this.loadEpoch();
   }
 
   startTimer() {
@@ -85,7 +83,7 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address="0x38d2E58E8b2E59A7c635c9245933d8391A774ddB";
+    const address="0x669a47792F6870881C0D8Be014Fc2b51e354925b";
     const abi=[
     {
       "inputs": [
@@ -1296,7 +1294,6 @@ async genesisLock(param){
       await this.loadRoundData(param);
       console.log("Current Time:"+ Date.now()/1000);
       console.log("lockTimestamp:" + this.state.roundData.lockTimestamp);
-
         if(this.state.roundData.lockTimestamp < Date.now()/1000){  
           var genesisLockRound= await this.state.contractData.methods.genesisLockRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
             console.log(reponse);
@@ -1355,7 +1352,7 @@ async executeRound(param,calling){
 
 async betBull(param){
   
-    var betBull= await this.state.contractData.methods.betBull(param).send({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.000000000000000001', 'ether')}).then((reponse)=>{
+    var betBull= await this.state.contractData.methods.betBull(param).send({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.1', 'ether')}).then((reponse)=>{
       console.log(reponse);
     }).catch((err)=>{
       console.log(err.message);
@@ -1365,7 +1362,7 @@ async betBull(param){
     }); 
 }
 async betBear(param){
-    var betBear= await this.state.contractData.methods.betBear(param).send({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.000000000000000001', 'ether')}).then((reponse)=>{
+    var betBear= await this.state.contractData.methods.betBear(param).send({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.1', 'ether')}).then((reponse)=>{
       console.log(reponse);
     }).catch((err)=>{
       console.log(err.message);
@@ -1375,13 +1372,24 @@ async betBear(param){
     }); 
 }
 
-async loadRoundData(param){
+async loadRoundData(param,rmt){
   console.log(param);
     const rounds=await this.state.contractData.methods.rounds(param).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
       //console.log(reponse);
       this.setState({
         roundData:reponse
       });
+      if(rmt){
+        console.log("roundData.lockTimestamp:" + this.state.roundData.lockTimestamp);
+        console.log("Current Time :" + Date.now()/1000);
+        
+        var remainingTime=this.state.roundData.lockTimestamp - (Date.now()/1000);
+        console.log("remainingTime:" + remainingTime);
+
+        this.setState({
+          seconds:remainingTime
+        });        
+      }
       console.log(this.state.roundData);
     }).catch((err)=>{
       console.log(err.message);
@@ -1400,7 +1408,9 @@ async loadEpoch(){
   var bettable= parseInt(await this.state.contractData.methods.currentEpoch().call());
   this.setState({
     bettable:bettable
-  })
+  })  
+  this.loadRoundData(bettable,'rmt');
+
   console.log(bettable);
 }
 
@@ -1430,6 +1440,28 @@ async showRoundData(){
   this.loadRoundData(textVal);
 }
 
+async pause(){
+    var pauseRound= await this.state.contractData.methods.pause().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+      console.log(reponse);
+    }).catch((err)=>{
+      console.log(err.message);
+      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
+      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
+      // console.log(errorMessageToShow);
+    }); 
+}
+
+async unpause(){
+    var pauseRound= await this.state.contractData.methods.unpause().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+      console.log(reponse);
+    }).catch((err)=>{
+      console.log(err.message);
+      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
+      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
+      // console.log(errorMessageToShow);
+    }); 
+}
+
   render() {
 
     return (
@@ -1449,6 +1481,8 @@ async showRoundData(){
             <button onClick={() => this.loadContract()}>Load Contract</button>
             <button onClick={() => this.loadEpoch()}>Load Epoch</button>
             <button onClick={() => this.oracleView()}>Oracle View Current Round ID</button>
+            <button onClick={() => this.pause()}>Pause</button> 
+            <button onClick={() => this.unpause()}>UnPause</button>                        
             <p>------------------------------</p>
             <p>Load Bettable/Running/Future Round Data</p>
              <input type="number" id="roundId"/>
