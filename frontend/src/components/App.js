@@ -44,12 +44,11 @@ class App extends Component {
       clearInterval(this.timer);
     }
      // console.log(this.state.time);
-      this.axiosFunc();
-
-      
-
+      this.axiosFunc();     
+      //this.executeRound("send");     
  } 
-   secondsToTime(secs){
+
+ secondsToTime(secs){
     let hours = Math.floor(secs / (60 * 60));
 
     let divisor_for_minutes = secs % (60 * 60);
@@ -64,25 +63,25 @@ class App extends Component {
       "s": seconds
     };
     return obj;
-  } 
+} 
 
   async loadWeb3() {
-     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    }    
+       if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum)
+        await window.ethereum.enable()
+      }
+      else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider)
+      }
+      else {
+        window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      }    
    
   }
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address="0x669a47792F6870881C0D8Be014Fc2b51e354925b";
+    const address="0x0bb62D742581c35810BB1a931E625dE130AF98eE";
     const abi=[
     {
       "inputs": [
@@ -1261,7 +1260,9 @@ class App extends Component {
       bettable:0,
       nextBettable:0,
       bnpPrice:0,
-      roundData:{}, time: {}, seconds: 300
+      roundData:{}, time: {}, seconds: 300,
+      roundDataViewOnly:{},
+      runningRound:{},
     }
     // this.state = { time: {}, seconds: 300 };
     this.timer = 0;
@@ -1272,7 +1273,9 @@ class App extends Component {
 
 testrender(){
    return (<div> m: {this.state.time.m} s: {this.state.time.s} 
+              <br></br>
               <b>BNB Price:${this.state.bnpPrice}</b>
+              <br></br>
           </div>);
 }
  /////////
@@ -1300,7 +1303,8 @@ async genesisLock(param){
           var genesisLockRound= await this.state.contractData.methods.genesisLockRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
             console.log(reponse);
             clearInterval(this.timer);
-            this.startTimer();             
+            this.startTimer();
+            this.loadEpoch();             
           }).catch((err)=>{
             console.log(err.message);
             // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
@@ -1314,22 +1318,25 @@ async genesisLock(param){
         }
 }  
 
-async executeRound(param,calling){
+async executeRound(calling){
 
   console.log("Execute Round Called");
 
-      await this.loadRoundData(param);
+      //await this.loadRoundData(param);
       console.log("Current Time:"+ Date.now()/1000);
-      console.log("closeTimestamp:"+ this.state.roundData.closeTimestamp);   
+      console.log("closeTimestamp:"+ this.state.runningRound.closeTimestamp);   
 
       
-        if(this.state.roundData.closeTimestamp < Date.now()/1000){   
-            
+        if(this.state.runningRound.closeTimestamp < Date.now()/1000){   
+             console.log("Executing Now");
+             clearInterval(this.timer);
             if(calling==='send'){     
             var executeRound= await this.state.contractData.methods.executeRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
               console.log(reponse);
-              this.loadEpoch();
-              clearInterval(this.timer);
+              this.setState({
+                runningRound:{}
+              });
+              this.loadEpoch();              
               this.startTimer();             
             }).catch((err)=>{
               console.log(err.message);
@@ -1378,9 +1385,16 @@ async loadRoundData(param,rmt){
   console.log(param);
     const rounds=await this.state.contractData.methods.rounds(param).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
       //console.log(reponse);
-      this.setState({
-        roundData:reponse
-      });
+      if(reponse.lockTimestamp < Date.now()/1000){
+        this.setState({
+          runningRound:reponse
+        });   
+      }
+      else{
+          this.setState({
+            roundData:reponse
+          });        
+        }
       if(rmt){
         console.log("roundData.lockTimestamp:" + this.state.roundData.lockTimestamp);
         console.log("Current Time :" + Date.now()/1000);
@@ -1401,6 +1415,26 @@ async loadRoundData(param,rmt){
     }); 
 }
 
+async loadRoundDataViewOnly(param){
+  console.log(param);
+    const rounds=await this.state.contractData.methods.rounds(param).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
+      //console.log(reponse);
+      this.setState({
+        roundDataViewOnly:reponse
+      });       
+      console.log(this.state.roundDataViewOnly);
+    }).catch((err)=>{
+      console.log(err.message);
+      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
+      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
+      // console.log(errorMessageToShow);
+    }); 
+}
+
+async loadRunningRoundData(){
+  this.loadRoundData(this.state.bettable-1);
+}
+
 async loadContract(){
   console.log(this.state.contractData);
   this.loadEpoch();  
@@ -1411,9 +1445,14 @@ async loadEpoch(){
   this.setState({
     bettable:bettable
   })  
-  this.loadRoundData(bettable,'rmt');
 
-  console.log(bettable);
+   console.log(bettable); 
+   await this.loadRoundData(bettable,'rmt');
+   if(this.state.bettable-1 > 0 ) {
+    await this.loadRunningRoundData();    
+   }
+   
+   
 }
 
 async oracleView(){
@@ -1439,7 +1478,7 @@ async show(){
 
 async showRoundData(){
   var textVal=document.getElementById("roundId").value;
-  this.loadRoundData(textVal);
+  this.loadRoundDataViewOnly(textVal);
 }
 
 async pause(){
@@ -1504,13 +1543,13 @@ async _getUserRoundsShow(_view){
      
             <p>Hola</p>
             {this.testrender()} 
-            <p>Running (Not Bettable):{this.state.bettable-1}</p>
+            <p>Running (Not Bettable):{this.state.bettable-1}, Locked Price:${this.state.runningRound.lockPrice/100000000}, Closed Price:${this.state.runningRound.closePrice/100000000}</p>
             <p>Bettable (Now):{this.state.bettable}</p>
             <p>Next Bettable (Not now) :{this.state.bettable+1}</p>
             <button onClick={() => this.genesisStart()}>Genesis Start</button>
             <button onClick={() => this.genesisLock(this.state.bettable)}>Genesis Lock</button>
-            <button onClick={() => this.executeRound(this.state.bettable-1,'send')}>Execute Round Running</button>
-            <button onClick={() => this.executeRound(this.state.bettable-1,'call')}>Execute Round Running (View Only)</button>           
+            <button onClick={() => this.executeRound('send')}>Execute Round Running</button>
+            <button onClick={() => this.executeRound('call')}>Execute Round Running (View Only)</button>           
             <button onClick={() => this.betBull(this.state.bettable)}>Bet Bull ({this.state.bettable})</button>
             <button onClick={() => this.betBear(this.state.bettable)}>Bet Bear ({this.state.bettable})</button>
             <button onClick={() => this.loadContract()}>Load Contract</button>
