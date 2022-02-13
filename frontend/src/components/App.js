@@ -9,11 +9,10 @@ import NftCards from './nft-cards'
 class App extends Component {
 
     axiosFunc(){
-          axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT").then((response) =>{
-            console.log(response.data.price);
-              // this.setState({
-              //   metaData:metaData
-              // });
+          axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT").then((response) =>{           
+              this.setState({
+                bnpPrice:response.data.price
+              });
              
           });    
   }
@@ -45,7 +44,7 @@ class App extends Component {
       clearInterval(this.timer);
     }
      // console.log(this.state.time);
-      //this.axiosFunc();
+      this.axiosFunc();
 
       
 
@@ -1261,6 +1260,7 @@ class App extends Component {
       contractData:{},
       bettable:0,
       nextBettable:0,
+      bnpPrice:0,
       roundData:{}, time: {}, seconds: 300
     }
     // this.state = { time: {}, seconds: 300 };
@@ -1271,7 +1271,9 @@ class App extends Component {
   }
 
 testrender(){
-   return (<div> m: {this.state.time.m} s: {this.state.time.s}</div>);
+   return (<div> m: {this.state.time.m} s: {this.state.time.s} 
+              <b>BNB Price:${this.state.bnpPrice}</b>
+          </div>);
 }
  /////////
 async genesisStart(){
