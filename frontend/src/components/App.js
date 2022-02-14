@@ -45,8 +45,11 @@ class App extends Component {
       clearInterval(this.timer);
     }
      // console.log(this.state.time);
-      this.axiosFunc();     
-      this.executeRound("send");     
+      this.axiosFunc();  
+     if(this.state.runningRound.lockTimestamp!=0){
+        this.executeRound("send");           
+     }    
+      
  } 
 
  secondsToTime(secs){
@@ -82,7 +85,7 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address="0xD9B397a57cF91C9188F24CAD11Da412Fad9C376F";
+    const address="0x41B00510B0e70b6B185185a96BcfFaB323f9EC43";
     const abi=PancakePredictionV2.abi;
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
