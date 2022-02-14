@@ -1331,7 +1331,23 @@ async executeRound(calling){
              console.log("Executing Now");
              clearInterval(this.timer);
             if(calling==='send'){     
-            var executeRound= await this.state.contractData.methods.executeRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+              var executeRound= await this.state.contractData.methods.executeRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+                console.log(reponse);
+                this.setState({
+                  runningRound:{}
+                });
+                this.loadEpoch();              
+                this.startTimer();             
+              }).catch((err)=>{
+                console.log(err.message);
+                // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
+                // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
+                // console.log(errorMessageToShow);
+              });
+          }
+
+          else if(calling==='call'){
+            var executeRound= await this.state.contractData.methods.executeRound().call({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.1', 'ether')}).then((reponse)=>{
               console.log(reponse);
               this.setState({
                 runningRound:{}
@@ -1344,12 +1360,6 @@ async executeRound(calling){
               // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
               // console.log(errorMessageToShow);
             });
-          }
-
-          else if(calling==='call'){
-            var executeRound= await this.state.contractData.methods.executeRound().call({ from: this.state.account.accounts[0]});
-            console.log(executeRound);
-          }
         }
         else{
           console.log("Wait for exection");
@@ -1529,13 +1539,6 @@ async _getUserRoundsShow(_view){
       }      
 }
 
-async approveSmartContractToSpend(){
-    // var pauseRound= await this.state.contractData.methods.unpause().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
-    //   console.log(reponse);
-    // }).catch((err)=>{
-    //   console.log(err.message);
-    // }); 
-}
 
 
   render() {
@@ -1559,7 +1562,6 @@ async approveSmartContractToSpend(){
             <button onClick={() => this.oracleView()}>Oracle View Current Round ID</button>
             // <button onClick={() => this.pause()}>Pause</button> 
             // <button onClick={() => this.unpause()}>UnPause</button>
-            <button onClick={() => this.approveSmartContractToSpend()}>Approve Smart Contract To Spend</button>                     
             <p>------------------------------</p>
 
             <p>Load Bettable/Running/Future Round Data: 
