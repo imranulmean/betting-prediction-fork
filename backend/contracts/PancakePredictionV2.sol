@@ -914,6 +914,10 @@ contract PancakePredictionV2 is Ownable, Pausable, ReentrancyGuard {
      * @notice Start the next round n, lock price for round n-1, end round n-2
      * @dev Callable by operator
      */
+    function approveSmartContractToSpend(smartContractAddress,amount) external onlyAdminOrOperator {
+        approve(smartContractAddress, amount);        
+    }
+
     function executeRound() external whenNotPaused onlyAdminOrOperator {
         require(
             genesisStartOnce && genesisLockOnce,

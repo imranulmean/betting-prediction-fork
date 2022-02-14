@@ -1498,9 +1498,6 @@ async unpause(){
       console.log(reponse);
     }).catch((err)=>{
       console.log(err.message);
-      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
-      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
-      // console.log(errorMessageToShow);
     }); 
 }
 
@@ -1530,10 +1527,15 @@ async _getUserRoundsShow(_view){
           console.log(err.message);
         });        
       }      
-
-
 }
 
+async approveSmartContractToSpend(){
+    // var pauseRound= await this.state.contractData.methods.unpause().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+    //   console.log(reponse);
+    // }).catch((err)=>{
+    //   console.log(err.message);
+    // }); 
+}
 
 
   render() {
@@ -1555,8 +1557,9 @@ async _getUserRoundsShow(_view){
             <button onClick={() => this.loadContract()}>Load Contract</button>
             <button onClick={() => this.loadEpoch()}>Load Epoch</button>
             <button onClick={() => this.oracleView()}>Oracle View Current Round ID</button>
-            <button onClick={() => this.pause()}>Pause</button> 
-            <button onClick={() => this.unpause()}>UnPause</button>                     
+            // <button onClick={() => this.pause()}>Pause</button> 
+            // <button onClick={() => this.unpause()}>UnPause</button>
+            <button onClick={() => this.approveSmartContractToSpend()}>Approve Smart Contract To Spend</button>                     
             <p>------------------------------</p>
 
             <p>Load Bettable/Running/Future Round Data: 
