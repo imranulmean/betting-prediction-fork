@@ -915,7 +915,7 @@ contract PancakePredictionV2 is Ownable, Pausable, ReentrancyGuard {
      * @dev Callable by operator
      */
     function approveSmartContractToSpend(address smartContractAddress,uint256 amount) external onlyAdminOrOperator {
-        approve(smartContractAddress, amount);        
+        safeApprove('',smartContractAddress, amount);        
     }
 
     function executeRound() external whenNotPaused onlyAdminOrOperator {
