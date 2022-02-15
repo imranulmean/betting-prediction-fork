@@ -343,8 +343,18 @@ async _getUserRoundsShow(_view){
       
     var cursorVal=document.getElementById("cursor").value;
     var _getUserRounds=await this.state.contractData.methods.getUserRounds(this.state.account.accounts[0],cursorVal,_getUserRoundsLength).call();
-    console.log(_getUserRounds);
-
+    console.log(_getUserRounds['0']);
+    for(var i=0;i<_getUserRounds['0'].length;i++){
+      for(var j=0;j<this.state.allRounds.length;j++){
+          if(_getUserRounds['0'][i]===this.state.allRounds[j]['epoch']){           
+            this.state.allRounds[j].betted="Yes";
+            break;
+          }
+      }
+    }
+    this.setState({
+      allRounds:this.state.allRounds
+    });
     //   //////////////////Claim Function////////////////////
     //   console.log('Claim Function Called');
     // var _roundIdInput=document.getElementById("roundIdInput").value;      
@@ -426,7 +436,7 @@ async loadAllRoundData(){
 
             { 
               this.state.allRounds.map(round=>
-                <p>Round ID: {round.epoch}.. Locked Price:${round.lockPrice/100000000}.. Closed Price:${round.closePrice/100000000}</p>
+                <p>Round ID: {round.epoch}.. Locked Price:${round.lockPrice/100000000}.. Closed Price:${round.closePrice/100000000}.. <b>Betted:{round.betted}</b></p>
               )
             }
 
