@@ -46,8 +46,8 @@ class App extends Component {
     }
      // console.log(this.state.time);
       this.axiosFunc();  
-     if(this.state.runningRound.lockTimestamp!=0){
-        this.executeRound("send");           
+     if(this.state.runningRound.closeTimestamp!=0 && this.state.runningRound.closeTimestamp < Date.now()/1000){
+         //this.executeRound("send");           
      }    
       
  } 
@@ -85,7 +85,7 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address="0x41B00510B0e70b6B185185a96BcfFaB323f9EC43";
+    const address="0xD7Fe20b1a27fBb3f3E7cB968B10dF1649cdD5bd9";
     const abi=PancakePredictionV2.abi;
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
@@ -132,7 +132,6 @@ testrender(){
 async genesisStart(){
 
   console.log("Genesis Start Called");
- 
      var genesisStartRound=await this.state.contractData.methods.genesisStartRound().send
      ({from: this.state.account.accounts[0],value:0}).then((reponse)=>{
        console.log(reponse);
@@ -177,47 +176,26 @@ async executeRound(calling){
       //await this.loadRoundData(param);
       console.log("Current Time:"+ Date.now()/1000);
       console.log("closeTimestamp:"+ this.state.runningRound.closeTimestamp);   
-
-      
-        if(this.state.runningRound.closeTimestamp!=0 && this.state.runningRound.closeTimestamp < Date.now()/1000){   
-             console.log("Executing Now");
-             clearInterval(this.timer);
-            if(calling==='send'){     
-            var executeRound= await this.state.contractData.methods.executeRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+      console.log("Executing Now");
+  
+           if(calling==='send'){
+            var executeRoundCall= await this.state.contractData.methods.executeRound().call({ from: this.state.account.accounts[0]}).then((reponse)=>{
               console.log(reponse);
-              this.setState({
-                runningRound:{}
-              });
-              this.loadEpoch();              
-              this.startTimer();             
+              clearInterval(this.timer);   
+////////////////////
+                var executeRound= this.state.contractData.methods.executeRound().send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+                  console.log(reponse);
+                  this.setState({
+                    runningRound:{}
+                  });
+                  this.loadEpoch();           
+                  this.startTimer();             
+                });
+///////////////////////                   
             }).catch((err)=>{
               console.log(err.message);
-              // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
-              // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
-              // console.log(errorMessageToShow);
-            });
-          }
-
-          else if(calling==='call'){
-            var executeRound= await this.state.contractData.methods.executeRound().call({ from: this.state.account.accounts[0]}).then((reponse)=>{
-              console.log(reponse);
-              this.setState({
-                runningRound:{}
-              });
-              this.loadEpoch();              
-              this.startTimer();             
-            }).catch((err)=>{
-              console.log(err.message);
-              // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
-              // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
-              // console.log(errorMessageToShow);
             });
         }
-      }    
-        else{
-          console.log("Wait for exection");
-        }   
-
 } 
 
 
@@ -228,9 +206,6 @@ async betBull(param){
       console.log(reponse);
     }).catch((err)=>{
       console.log(err.message);
-      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
-      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
-      // console.log(errorMessageToShow);
     }); 
 }
 async betBear(param){
@@ -238,9 +213,6 @@ async betBear(param){
       console.log(reponse);
     }).catch((err)=>{
       console.log(err.message);
-      // var errorMessageInJson =JSON.parse(err.message.slice(58, err.message.length - 2));
-      // var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
-      // console.log(errorMessageToShow);
     }); 
 }
 
@@ -373,23 +345,23 @@ async _getUserRoundsShow(_view){
     var _getUserRounds=await this.state.contractData.methods.getUserRounds(this.state.account.accounts[0],cursorVal,_getUserRoundsLength).call();
     console.log(_getUserRounds);
 
-      //////////////////Claim Function////////////////////
-      console.log('Claim Function Called');
-    var _roundIdInput=document.getElementById("roundIdInput").value;      
-      if(_view){
-        var _claim= await this.state.contractData.methods.claim([_roundIdInput]).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
-          console.log(reponse);
-        }).catch((err)=>{
-          console.log(err.message);
-        });        
-      } 
-      else{
-        var _claim= await this.state.contractData.methods.claim([_roundIdInput]).send({ from: this.state.account.accounts[0]}).then((reponse)=>{
-          console.log(reponse);
-        }).catch((err)=>{
-          console.log(err.message);
-        });        
-      }      
+    //   //////////////////Claim Function////////////////////
+    //   console.log('Claim Function Called');
+    // var _roundIdInput=document.getElementById("roundIdInput").value;      
+    //   if(_view){
+    //     var _claim= await this.state.contractData.methods.claim([_roundIdInput]).call({ from: this.state.account.accounts[0]}).then((reponse)=>{
+    //       console.log(reponse);
+    //     }).catch((err)=>{
+    //       console.log(err.message);
+    //     });        
+    //   } 
+    //   else{
+    //     var _claim= await this.state.contractData.methods.claim([_roundIdInput]).send({ from: this.state.account.accounts[0]}).then((reponse)=>{
+    //       console.log(reponse);
+    //     }).catch((err)=>{
+    //       console.log(err.message);
+    //     });        
+    //   }      
 }
 
 async loadAllRoundData(){
