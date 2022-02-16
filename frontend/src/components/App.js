@@ -85,7 +85,8 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address="0xD7Fe20b1a27fBb3f3E7cB968B10dF1649cdD5bd9";
+    //const address="0xD7Fe20b1a27fBb3f3E7cB968B10dF1649cdD5bd9";
+    const address="0x4c2b504527FC133d8d956E97828a4E656bea9919";
     const abi=PancakePredictionV2.abi;
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
