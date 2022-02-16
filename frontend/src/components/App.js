@@ -339,15 +339,30 @@ async unpause(){
 
 async _getUserRoundsShow(_view){
     var _getUserRoundsLength=await this.state.contractData.methods.getUserRoundsLength(this.state.account.accounts[0]).call();
-    console.log('_getUserRoundsLength: '+_getUserRoundsLength);
-      
+    console.log('_getUserRoundsLength: '+_getUserRoundsLength);      
     var cursorVal=document.getElementById("cursor").value;
     var _getUserRounds=await this.state.contractData.methods.getUserRounds(this.state.account.accounts[0],cursorVal,_getUserRoundsLength).call();
-    console.log(_getUserRounds['0']);
+    console.log(_getUserRounds);
     for(var i=0;i<_getUserRounds['0'].length;i++){
       for(var j=0;j<this.state.allRounds.length;j++){
           if(_getUserRounds['0'][i]===this.state.allRounds[j]['epoch']){           
             this.state.allRounds[j].betted="Yes";
+
+            if(this.state.allRounds[j].closePrice > this.state.allRounds[j].lockPrice){
+              this.state.allRounds[j].whoWins="Bull Wins"
+            }             
+            if(this.state.allRounds[j].closePrice < this.state.allRounds[j].lockPrice){
+              this.state.allRounds[j].whoWins="Bear Wins"
+            } 
+            else{
+              this.state.allRounds[j].whoWins="House Wins"
+            }          
+            if(_getUserRounds['1'][i].position==0){
+              this.state.allRounds[j].bettedPosition="Bull/UP"
+            }
+            else{
+              this.state.allRounds[j].bettedPosition="Bear/DOWN"
+            }
             break;
           }
       }
@@ -428,15 +443,12 @@ async loadAllRoundData(){
             </p>
             <p>Input Cursor: 
               <input type="number" id="cursor"/>
-              Input Round:
-               <input type="number" id="roundIdInput"/>
-              <button onClick={() => this._getUserRoundsShow('view')}>View Error </button>
               <button onClick={() => this._getUserRoundsShow()}>_getUserRoundsShow </button>
             </p>
 
             { 
               this.state.allRounds.map(round=>
-                <p>Round ID: {round.epoch}.. Locked Price:${round.lockPrice/100000000}.. Closed Price:${round.closePrice/100000000}.. <b>Betted:{round.betted}</b></p>
+                <p>Round ID: {round.epoch}.. Locked Price:${round.lockPrice/100000000}.. Closed Price:${round.closePrice/100000000}.. <b>Betted:{round.betted}.. Position:{round.bettedPosition}.. Who Wins:{round.whoWins}</b></p>
               )
             }
 
@@ -448,18 +460,7 @@ async loadAllRoundData(){
 
 export default App;
 
- //{this.testrender()} 
-  // <button onClick={() => this.loadRoundData(this.state.bettable)}>Load Bettable Round Data ({this.state.bettable})</button>
-  // <button onClick={() => this.loadRoundData(this.state.bettable+1)}>Load Not Bettable Round Data ({this.state.bettable+1})</button>
-  // <button onClick={() => this.loadRoundData(this.state.bettable-1)}>Load Running ({this.state.bettable-1})</button>
-
-
- //            
- //            
- //            
- //            
- //            
- //            
- //            
- //            
-
+  // Input Round:
+  //              <input type="number" id="roundIdInput"/>
+  //             <button onClick={() => this._getUserRoundsShow('view')}>View Error </button>
+  //            
