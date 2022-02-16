@@ -47,7 +47,7 @@ class App extends Component {
      // console.log(this.state.time);
       this.axiosFunc();  
      if(this.state.runningRound.closeTimestamp!=0 && this.state.runningRound.closeTimestamp < Date.now()/1000){
-         //this.executeRound("send");           
+         this.executeRound("send");           
      }    
       
  } 
