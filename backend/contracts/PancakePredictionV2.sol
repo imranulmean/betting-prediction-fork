@@ -878,6 +878,14 @@ contract PancakePredictionV2 is Ownable, Pausable, ReentrancyGuard {
      * @notice Claim reward for an array of epochs
      * @param epochs: array of epochs
      */
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function deposit() payable public {
+        
+    }    
+
     function claim(uint256[] calldata epochs) external nonReentrant notContract {
         uint256 reward; // Initializes reward
 
