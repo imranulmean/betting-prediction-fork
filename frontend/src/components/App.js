@@ -86,7 +86,8 @@ class App extends Component {
 
     const web3 = window.web3;
     //const address="0xD7Fe20b1a27fBb3f3E7cB968B10dF1649cdD5bd9";
-    const address="0x96Fc3a5d820ba785ed2Ec5cDF9c441b82731657d";
+    //const address="0x96Fc3a5d820ba785ed2Ec5cDF9c441b82731657d";
+    const address ="0xa0E569D4da401c9e91F6Ca173294a124074575e1";
     const abi=PancakePredictionV2.abi;
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
