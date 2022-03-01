@@ -882,7 +882,7 @@ contract PancakePredictionV2 is Ownable, Pausable, ReentrancyGuard {
         return address(this).balance;
     }
 
-    function deposit() payable public {
+    function deposit() public payable {
         
     }    
 
