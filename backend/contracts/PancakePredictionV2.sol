@@ -874,10 +874,6 @@ contract PancakePredictionV2 is Ownable, Pausable, ReentrancyGuard {
         emit BetBull(msg.sender, epoch, amount);
     }
 
-    /**
-     * @notice Claim reward for an array of epochs
-     * @param epochs: array of epochs
-     */
     function getBalance() public view returns (uint256) {
         return address(this).balance;
     }

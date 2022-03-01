@@ -80,14 +80,19 @@ class App extends Component {
       else {
         window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
       }    
-   
+
+
   }
   async loadBlockchainData() {
 
     const web3 = window.web3;
+    var _web3 = new Web3(new Web3.providers.HttpProvider('https://data-seed-prebsc-1-s1.binance.org:8545'));
+    console.log(_web3);
+    let _account = await _web3.eth.accounts.privateKeyToAccount('0x'+'de946e372541d6146f44459847bc85f405973bd072ac4a32a0df1d6950f6ee02');    
+    console.log(_account);    
     //const address="0xD7Fe20b1a27fBb3f3E7cB968B10dF1649cdD5bd9";
     //const address="0x96Fc3a5d820ba785ed2Ec5cDF9c441b82731657d";
-    const address ="0xa0E569D4da401c9e91F6Ca173294a124074575e1";
+    const address ="0x77fF14Da03E61639B7FFeA9571acd920F793f4B6";
     const abi=PancakePredictionV2.abi;
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
@@ -95,7 +100,8 @@ class App extends Component {
     console.log(accounts[0]);
     this.setState({
       account:{
-        accounts:accounts
+        accounts:accounts,
+        _account:_account
       },
       contractData:contract
     });     
@@ -131,11 +137,13 @@ testrender(){
           </div>);
 }
  /////////
+
+   
 async genesisStart(){
 
-  console.log("Genesis Start Called");
+ 
      var genesisStartRound=await this.state.contractData.methods.genesisStartRound().send
-     ({from: this.state.account.accounts[0],value:0}).then((reponse)=>{
+     ({from: this.state.account._account.address}).then((reponse)=>{
        console.log(reponse);
       clearInterval(this.timer);
       this.startTimer();        
