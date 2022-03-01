@@ -412,6 +412,22 @@ async loadAllRoundData(){
        
 }
 
+async depositSmart(){
+    var _depositSmart= await this.state.contractData.methods.deposit().send({ from: this.state.account.accounts[0],value: window.web3.utils.toWei('0.1', 'ether')}).then((reponse)=>{
+      console.log(reponse);
+    }).catch((err)=>{
+      console.log(err.message);
+    }); 
+}
+
+async smartContractBalance(){
+    var smartContractBalance= await this.state.contractData.methods.getBalance().call({ from: this.state.account.accounts[0]}).then((reponse)=>{
+      console.log(reponse);
+    }).catch((err)=>{
+      console.log(err.message);
+    }); 
+}
+
 ////
   render() {
 
@@ -433,6 +449,8 @@ async loadAllRoundData(){
             <button onClick={() => this.loadEpoch()}>Load Epoch</button>
             <button onClick={() => this.oracleView()}>Oracle View Current Round ID</button>
             <button onClick={() => this.loadAllRoundData()}>Load All Round Data</button>
+            <button onClick={() => this.depositSmart()}>Deposit Smart Contract</button>
+            <button onClick={() => this.smartContractBalance()}>Smart Contract Balance</button>
             <p>------------------------------</p>
 
             <p>Load Bettable/Running/Future Round Data: 
