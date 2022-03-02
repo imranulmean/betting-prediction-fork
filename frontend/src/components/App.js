@@ -141,8 +141,20 @@ testrender(){
    
 async genesisStart(){
 
- 
-     var genesisStartRound=await this.state.contractData.methods.genesisStartRound().send
+    var _web3=new Web3(new Web3.providers.HttpProvider('https://data-seed-prebsc-1-s1.binance.org'));
+    //console.log(_web3);
+    let _account = await _web3.eth.accounts.privateKeyToAccount('0x'+'de946e372541d6146f44459847bc85f405973bd072ac4a32a0df1d6950f6ee02');    
+    //console.log(_account); 
+
+  _web3.eth.accounts.signTransaction({
+      to: '0x77fF14Da03E61639B7FFeA9571acd920F793f4B6',
+      value: '',
+      gas: 2000000
+
+  }, '0xde946e372541d6146f44459847bc85f405973bd072ac4a32a0df1d6950f6ee02')
+  .then(response=>{
+    console.log(response);
+     var genesisStartRound= this.state.contractData.methods.genesisStartRound().send
      ({from: this.state.account._account.address}).then((reponse)=>{
        console.log(reponse);
       clearInterval(this.timer);
@@ -153,6 +165,9 @@ async genesisStart(){
      var errorMessageToShow = errorMessageInJson.data.data[Object.keys(errorMessageInJson.data.data)[0]].reason;
      console.log(errorMessageToShow);
      });    
+  });
+ 
+   
 }  
 
 async genesisLock(param){
