@@ -12,7 +12,8 @@ module.exports = function(express, app, _account, contract) {
     var hashObject={};
 
     app.get('/coinflip', function(req, res) {
-            // This could come from user input or be randomly generated.            
+            // This could come from user input or be randomly generated.  
+                
             var secretChoice = false;
             const randomNumber = crypto.randomInt(0, 1000000);
              console.log(randomNumber);

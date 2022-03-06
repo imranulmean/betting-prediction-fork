@@ -34,12 +34,16 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address ="0x620d196D04cD304Cf82a7553d701EA29AB3Efc5d";
-    const abi=CoinFlipPrediction.abi;
+    const address ="0xfa88c5fc0e8F9BCdC4ccb8F08687B8a52E9e6383";
+    //Token Contract Address
+     //const address ="0x4B8fCc859Ce34374e5202BC6F0aCA077bf9cDCAe";
+     const abi=CoinFlipPrediction.abi;
+
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
     console.log(contract);
     console.log(accounts[0]);
+    console.log(await contract.methods.getBalance().call());
     this.setState({
       account:{
         accounts:accounts
