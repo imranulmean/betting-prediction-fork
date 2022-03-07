@@ -34,324 +34,11 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address ="0xb4FBeb41bFF3355DA19fB64985c3b26e09bD720e";
+    const address ="0xa53aE7B43937FB111074BD7DC6274fd9E500FB2e";
     //Token Contract Address
      //const address ="0x4B8fCc859Ce34374e5202BC6F0aCA077bf9cDCAe";
-     //const abi=CoinFlipPrediction.abi;
-    const abi= [
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "BetPlaced",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "cancel",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimTimeout",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "commitment",
-        "type": "bytes32"
-      }
-    ],
-    "name": "CoinFlip",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "mesg",
-        "type": "string"
-      }
-    ],
-    "name": "GameMessage",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Paused",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "choice",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "nonce",
-        "type": "uint256"
-      }
-    ],
-    "name": "reveal",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "choice",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_betAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "takeBet",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
-    ],
-    "name": "transferERC20",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Unpaused",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "betAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "expiration",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "tokenAddress",
-        "type": "address"
-      }
-    ],
-    "name": "getBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "player1",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "player1Commitment",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "player2",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "player2Choice",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+     const abi=CoinFlipPrediction.abi;
+    
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(abi, address);
     console.log(contract);
@@ -397,6 +84,29 @@ async coinFlip(betChoice){
   // }); 
     
 }
+
+async safeApproveERC20ToCoinFlip(){
+  var _betAmount=100;
+  var tokenSc="0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4";  
+  var _safeApproveERC20ToCoinFlip=  this.state.contractData.methods.safeApproveERC20ToCoinFlip(tokenSc,_betAmount).send({from: this.state.account.accounts[0]}).then((reponse)=>{
+          //this.reveal(betChoice);
+          console.log(reponse);
+    }).catch((err)=>{
+    console.log(err.message);
+  });      
+}
+
+async transferERC20ToCoinFlip(){
+  var _betAmount=100;
+  var tokenSc="0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4";  
+  var _transferERC20ToCoinFlip=  this.state.contractData.methods.transferERC20ToCoinFlip(tokenSc,_betAmount).send({from: this.state.account.accounts[0]}).then((reponse)=>{
+          //this.reveal(betChoice);
+          console.log(reponse);
+    }).catch((err)=>{
+    console.log(err.message);
+  });      
+}
+
 async reveal(betChoice){
 
   axios.get('http://localhost:5000/revealResult').then(response=>{
@@ -425,6 +135,9 @@ async result007(){
                     
             {/* <button onClick={() => this.coinFlip()}>Coin Flip</button> */}
             <p>------------Bet Place------------------</p>
+            
+            <button onClick={() => this.safeApproveERC20ToCoinFlip()}>safeApprove ERC20To CoinFlip </button>
+            <button onClick={() => this.transferERC20ToCoinFlip()}>transfer ERC20 To CoinFlip </button>
             <button onClick={() => this.coinFlip(true)}>Heads </button>
             <button onClick={() => this.coinFlip(false)}>Tails </button>
             {/* <p>-----------Reveal Result------------------</p>

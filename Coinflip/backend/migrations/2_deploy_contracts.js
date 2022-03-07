@@ -8,6 +8,13 @@ module.exports = async function(deployer, network, accounts) {
 
 }
 
+
+// Token Contract Address 
+// 0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4
+
+//CoinFlip Contract adrres
+// 0x55860C24eF73Af87d182b9E3C087511C37f46C27
+
 // Accounts:
 // (0) 0x481d45334874199010c839144dfebbbe12c98a80
 // (1) 0x1e88c52496c55b5bcfb542191bce71c761940c84
@@ -32,3 +39,5 @@ module.exports = async function(deployer, network, accounts) {
 // (8) 29a756f4bc9e6b038c3ced28d2b22bb77893a00e8c69195f47685d8886dbf72d
 // (9) 6cc87248c2aeabfc9a57662c77f477347a7604199f507544527e3259943e210c
 // truffle deploy --network testnet --reset --compile-none
+
+

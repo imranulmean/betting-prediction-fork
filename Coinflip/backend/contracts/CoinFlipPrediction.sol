@@ -628,6 +628,7 @@ library SafeERC20 {
 }
 
 
+
 pragma solidity ^0.8.0;
 pragma abicoder v2;
 
@@ -638,6 +639,7 @@ pragma abicoder v2;
  */
 contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
 
+    using SafeERC20 for IERC20;
     address public player1;
     bytes32 public player1Commitment;
 
@@ -699,6 +701,27 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
         require(block.timestamp >= expiration);
         payable(player2).transfer(address(this).balance);
     }
+
+
+    // function approveERC20(IERC20 token, address to) public onlyOwner {
+        
+    //     uint256 erc20balance = token.balanceOf(address(this));
+    //     token.transfer(to, erc20balance);
+    //     approve(address spender, uint256 amount) external returns (bool);
+    // } 
+
+    function safeApproveERC20ToCoinFlip(IERC20 token, uint256 _betAmount) public  {
+
+        token.approve(address(this), _betAmount);     
+    }
+
+    function transferERC20ToCoinFlip(IERC20 token, uint256 _betAmount) public  {
+             
+    //     require(_betAmount > 0, "You need to sell at least some tokens");
+    //     uint256 allowance = token.allowance(msg.sender, address(this));
+    //    require(allowance >= _betAmount, "Check the token allowance");             
+        token.safeTransferFrom(msg.sender,address(this),_betAmount);        
+    } 
 
     function transferERC20(IERC20 token, address to) public onlyOwner {
         
