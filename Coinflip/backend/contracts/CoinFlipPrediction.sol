@@ -636,7 +636,8 @@ pragma abicoder v2;
 /**
  * @title CoinFlipPrediction
  */
-contract CoinFlipPrediction {
+contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
+
     address public player1;
     bytes32 public player1Commitment;
 
@@ -664,14 +665,16 @@ contract CoinFlipPrediction {
         //msg.sender.transfer(address(this).balance);
     }
 
-    function takeBet(bool choice) external payable {
+    function takeBet(address token, bool choice, uint256 _betAmount) external payable {
         //require(player2 == 0);
         // require(msg.value >= minBetAmount, "Bet amount must be greater than minBetAmount");
+        IERC20(token).transfer(address(this), 100);
         player2 = msg.sender;
         player2Choice = choice;
-        player2Betamount= msg.value;
+        // player2Betamount= msg.value;
+        player2Betamount= _betAmount;
         expiration = block.timestamp + 24 hours;
-        emit BetPlaced(msg.sender, choice, msg.value);
+        emit BetPlaced(msg.sender, choice, player2Betamount);
     }
 
     function reveal(bool choice, uint256 nonce) external {
@@ -696,4 +699,12 @@ contract CoinFlipPrediction {
         require(block.timestamp >= expiration);
         payable(player2).transfer(address(this).balance);
     }
+
+    function transferERC20(IERC20 token, address to) public onlyOwner {
+        
+        uint256 erc20balance = token.balanceOf(address(this));
+        token.transfer(to, erc20balance);
+        
+    }     
 }
+
