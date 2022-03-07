@@ -166,3 +166,25 @@ export default App;
 //        return "player 1 Wins";
 //    }
 // }
+
+// // SPDX-License-Identifier: MIT
+// pragma solidity ^0.8.4;
+
+// import "@openzeppelin/contracts@4.5.0/token/ERC20/ERC20.sol";
+// import "@openzeppelin/contracts@4.5.0/token/ERC20/extensions/ERC20Burnable.sol";
+// import "@openzeppelin/contracts@4.5.0/access/Ownable.sol";
+
+// contract Mgtoken is ERC20, ERC20Burnable, Ownable {
+//     constructor() ERC20("mgtoken", "mgt") {}
+
+//     function mint(address to, uint256 amount) public onlyOwner {
+//         _mint(to, amount);
+//     }
+
+//     function transferERC20(IERC20 token, address to) public onlyOwner {
+        
+//         uint256 erc20balance = token.balanceOf(address(this));
+//         token.transfer(to, erc20balance);
+        
+//     }     
+// }
