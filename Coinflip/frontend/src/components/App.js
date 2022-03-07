@@ -34,7 +34,7 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const address ="0xa53aE7B43937FB111074BD7DC6274fd9E500FB2e";
+    const address ="0x228694BC677D76d72054fbE77a61e6BFE5fDD568";
     //Token Contract Address
      //const address ="0x4B8fCc859Ce34374e5202BC6F0aCA077bf9cDCAe";
      const abi=CoinFlipPrediction.abi;
@@ -87,7 +87,7 @@ async coinFlip(betChoice){
 
 async safeApproveERC20ToCoinFlip(){
   var _betAmount=100;
-  var tokenSc="0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4";  
+  var tokenSc="0x0A32B269c29f730fe5f08CDc10fFBB585A85eBac";  
   var _safeApproveERC20ToCoinFlip=  this.state.contractData.methods.safeApproveERC20ToCoinFlip(tokenSc,_betAmount).send({from: this.state.account.accounts[0]}).then((reponse)=>{
           //this.reveal(betChoice);
           console.log(reponse);
@@ -98,7 +98,7 @@ async safeApproveERC20ToCoinFlip(){
 
 async transferERC20ToCoinFlip(){
   var _betAmount=100;
-  var tokenSc="0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4";  
+  var tokenSc="0x0A32B269c29f730fe5f08CDc10fFBB585A85eBac";  
   var _transferERC20ToCoinFlip=  this.state.contractData.methods.transferERC20ToCoinFlip(tokenSc,_betAmount).send({from: this.state.account.accounts[0]}).then((reponse)=>{
           //this.reveal(betChoice);
           console.log(reponse);

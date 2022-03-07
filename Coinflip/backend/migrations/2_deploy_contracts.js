@@ -10,7 +10,7 @@ module.exports = async function(deployer, network, accounts) {
 
 
 // Token Contract Address 
-// 0x7deB77ce152D6dA5C94Ff07f946C6A4B8EA303A4
+// 0x0A32B269c29f730fe5f08CDc10fFBB585A85eBac
 
 //CoinFlip Contract adrres
 // 0x55860C24eF73Af87d182b9E3C087511C37f46C27

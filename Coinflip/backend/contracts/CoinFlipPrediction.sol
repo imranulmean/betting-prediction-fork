@@ -719,7 +719,8 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
              
     //     require(_betAmount > 0, "You need to sell at least some tokens");
     //     uint256 allowance = token.allowance(msg.sender, address(this));
-    //    require(allowance >= _betAmount, "Check the token allowance");             
+    //    require(allowance >= _betAmount, "Check the token allowance");  
+        token.safeIncreaseAllowance(address(this),_betAmount);           
         token.safeTransferFrom(msg.sender,address(this),_betAmount);        
     } 
 
