@@ -703,24 +703,7 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
     }
 
 
-    // function approveERC20(IERC20 token, address to) public onlyOwner {
-        
-    //     uint256 erc20balance = token.balanceOf(address(this));
-    //     token.transfer(to, erc20balance);
-    //     approve(address spender, uint256 amount) external returns (bool);
-    // } 
-
-    function safeApproveERC20ToCoinFlip(IERC20 token, uint256 _betAmount) public  {
-
-        token.approve(address(this), _betAmount);     
-    }
-
-    function transferERC20ToCoinFlip(IERC20 token, uint256 _betAmount) public  {
-             
-    //     require(_betAmount > 0, "You need to sell at least some tokens");
-    //     uint256 allowance = token.allowance(msg.sender, address(this));
-    //    require(allowance >= _betAmount, "Check the token allowance");  
-        token.safeIncreaseAllowance(address(this),_betAmount);           
+    function transferERC20ToCoinFlip(IERC20 token, uint256 _betAmount) public  {                      
         token.safeTransferFrom(msg.sender,address(this),_betAmount);        
     } 
 
