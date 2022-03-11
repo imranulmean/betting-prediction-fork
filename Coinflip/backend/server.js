@@ -20,11 +20,11 @@ if (typeof web3 !== 'undefined') {
     const provider = new HDWalletProvider("0xde946e372541d6146f44459847bc85f405973bd072ac4a32a0df1d6950f6ee02", 'http://127.0.0.1:9545'); 
     const _web3 = new Web3(provider);
      _account = _web3.eth.accounts.privateKeyToAccount('0x'+'de946e372541d6146f44459847bc85f405973bd072ac4a32a0df1d6950f6ee02');    
-    var contractAddress ="0x83A50423EB05c8046d003821f39CaB2d18f3145c";  
-    var tokenContractAddress ="0x754629c3ab7270748EcdD504F3325BFC8b1059C9";   
+    var coinFlipContractAddress ="0xf70245289E9Acc1246358803dC37727Cc40b7df6";  
+    var tokenContractAddress ="0x0A32B269c29f730fe5f08CDc10fFBB585A85eBac";   
     var abi=CoinFlipPrediction.abi;
     var tokenContractAbi=Mgtoken.abi;
-    contract = new _web3.eth.Contract(abi, contractAddress);
+    contract = new _web3.eth.Contract(abi, coinFlipContractAddress);
     tokenContract = new _web3.eth.Contract(tokenContractAbi, tokenContractAddress);
     
     // var genesisStart=contract.methods.genesisStartRound().send({from:_account.address}).then(response=>{

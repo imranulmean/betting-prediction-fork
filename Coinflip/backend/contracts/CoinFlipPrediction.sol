@@ -653,6 +653,13 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
 
     event BetPlaced(address indexed sender, bool, uint256 amount);
     event GameMessage(string mesg);
+    uint256 public totalRound=0;
+    mapping (uint256 => Round) public allRounds;
+    mapping (address => Round[]) public eachPlayerRounds;
+    struct Round {
+        uint256 betAmount;
+        bool winningPosition;
+    }    
 
     function CoinFlip(bytes32 commitment) public  {
         player1 = msg.sender;
@@ -675,7 +682,13 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
         player2Choice = choice;
         // player2Betamount= msg.value;
         player2Betamount= _betAmount;
-        expiration = block.timestamp + 24 hours;
+        totalRound++;
+        Round memory r;
+        r.betAmount=_betAmount;
+        r.winningPosition=choice;
+        allRounds[totalRound]=r;
+        eachPlayerRounds[msg.sender].push(r);
+        expiration = block.timestamp + 24 hours;        
         emit BetPlaced(msg.sender, choice, player2Betamount);
     }
 
@@ -683,9 +696,13 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
        // require(player2 != 0);
         //require(block.timestamp < expiration);
       require(keccak256(abi.encodePacked(choice, nonce))== player1Commitment);        
-        
+      Round memory r=allRounds[totalRound];
+      r.winningPosition=choice;
+      allRounds[totalRound]=r;
+      eachPlayerRounds[player2][totalRound]=r;
         if (player2Choice == choice) {
             // payable(player2).transfer(address(this).balance);
+
             emit GameMessage("You win. check your wallet");
         } else {
             emit GameMessage("You lost. try again");
