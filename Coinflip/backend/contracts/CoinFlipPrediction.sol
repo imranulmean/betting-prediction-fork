@@ -633,7 +633,6 @@ pragma solidity ^0.8.0;
 pragma abicoder v2;
 
 
-
 /**
  * @title CoinFlipPrediction
  */
@@ -655,10 +654,13 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
     event GameMessage(string mesg);
     uint256 public totalRound=0;
     mapping (uint256 => Round) public allRounds;
-    mapping (address => Round[]) public eachPlayerRounds;
+    mapping (address => mapping (uint256 => Round)) public eachPlayerRounds;
+    mapping (address => uint256[]) public countOfEachPlayerRound;
+
     struct Round {
         uint256 betAmount;
         bool winningPosition;
+        bool playerWins;
     }    
 
     function CoinFlip(bytes32 commitment) public  {
@@ -687,7 +689,8 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
         r.betAmount=_betAmount;
         r.winningPosition=choice;
         allRounds[totalRound]=r;
-        eachPlayerRounds[msg.sender].push(r);
+        eachPlayerRounds[msg.sender][totalRound]=r;
+        countOfEachPlayerRound[msg.sender].push(totalRound);
         expiration = block.timestamp + 24 hours;        
         emit BetPlaced(msg.sender, choice, player2Betamount);
     }
@@ -696,7 +699,8 @@ contract CoinFlipPrediction is Ownable, Pausable, ReentrancyGuard {
        // require(player2 != 0);
         //require(block.timestamp < expiration);
       require(keccak256(abi.encodePacked(choice, nonce))== player1Commitment);        
-      Round memory r=allRounds[totalRound];
+      //Round memory r=allRounds[totalRound];
+      Round memory r=eachPlayerRounds[player2][totalRound];
       r.winningPosition=choice;
       allRounds[totalRound]=r;
       eachPlayerRounds[player2][totalRound]=r;

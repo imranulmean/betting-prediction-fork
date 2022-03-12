@@ -35,7 +35,7 @@ class App extends Component {
   async loadBlockchainData() {
 
     const web3 = window.web3;
-    const coinFlipaddress ="0xf70245289E9Acc1246358803dC37727Cc40b7df6";
+    const coinFlipaddress ="0x44B65723611Df474a07bDf134c1BaB45C34202E4";
     const tokenContractAddres="0x0A32B269c29f730fe5f08CDc10fFBB585A85eBac"
     //Token Contract Address
      //const address ="0x4B8fCc859Ce34374e5202BC6F0aCA077bf9cDCAe";
@@ -82,7 +82,8 @@ async coinFlip(betChoice){
   axios.post("http://localhost:5000/coinflip",{betChoice:betChoice,_betAmount:this._betAmount}).then((commitment) =>{   
     console.log(commitment);  
     var _takeBet=  this.state.coinFlipContractData.methods.takeBet(this.state.tokenContractData._address,betChoice,this._betAmount).send({from: this.state.account.accounts[0]}).then((reponse)=>{
-            this.reveal();
+      console.log(reponse);     
+       this.reveal();
       }).catch((err)=>{
       console.log(err.message);
     });                   
@@ -152,6 +153,13 @@ async allRoundsData(){
     });     
 }
 
+async eachPlayerRoundsData(){
+
+  var _playerRoundsData=  this.state.coinFlipContractData.methods.countOfEachPlayerRound(this.state.account.accounts[0],0).call({from:this.state.account.accounts[0]}).then(response=>{
+    console.log(response);
+  });     
+}
+
 
 ////
   render() {
@@ -169,7 +177,8 @@ async allRoundsData(){
             {/* <button onClick={() => this.transferERC20ToCoinFlip()}>transfer ERC20 To CoinFlip </button> */}
             <button onClick={() => this.coinFlip(true)}>Heads </button>
             <button onClick={() => this.coinFlip(false)}>Tails </button>
-            <button onClick={() => this.allRoundsData()}>All Rounds Data </button>            
+            <button onClick={() => this.allRoundsData()}>All Rounds Data </button>
+            <button onClick={() => this.eachPlayerRoundsData()}>Each Player Rounds Data </button>            
             {/* <p>-----------Reveal Result------------------</p>
             <button onClick={() => this.result007()}>Reveal Result</button> */}
             </>  
